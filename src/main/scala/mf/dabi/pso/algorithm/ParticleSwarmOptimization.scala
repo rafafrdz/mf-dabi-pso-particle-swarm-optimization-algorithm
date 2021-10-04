@@ -9,14 +9,6 @@ import scala.annotation.tailrec
 
 object ParticleSwarmOptimization {
 
-  val dim = 2
-  val limits: Bound[Double] = List.fill(dim)((-100, 100))
-  val space: SearchSpace = SearchSpace(dim, limits)
-
-  def main(args: Array[String]): Unit = {
-    val p: Particle = algorithm(4000, 156, space)(sphere, 0.4091, 2.1304, 1.0575)
-    println(p)
-  }
 
   def algorithm(eval: Int, swarmSize: Int, space: SearchSpace)(f: Particle => Double, omega: Double, phip: Double, phig: Double): Particle = {
 
