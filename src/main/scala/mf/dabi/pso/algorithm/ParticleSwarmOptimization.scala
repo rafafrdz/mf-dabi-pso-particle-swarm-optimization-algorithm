@@ -1,7 +1,6 @@
 package mf.dabi.pso.algorithm
 
 import breeze.linalg.DenseVector
-import mf.dabi.pso.algorithm.AlghFunctions._
 import mf.dabi.pso.algorithm.space.SearchSpace
 import mf.dabi.pso.algorithm.space.SearchSpace.{Bound, Particle, Swarm}
 
@@ -10,11 +9,24 @@ import scala.annotation.tailrec
 object ParticleSwarmOptimization {
 
 
-  def algorithm(eval: Int, swarmSize: Int, space: SearchSpace)(f: Particle => Double, omega: Double, phip: Double, phig: Double): Particle = {
+  /**
+   * Particle Swarm Optimization (PSO) algorithm
+   *
+   * @param eval      num. of evaluations
+   * @param swarmSize size of particle swarm
+   * @param space     SearchSpace where particles live in
+   * @param f         fitness function
+   * @param init      initial swarm
+   * @param omega     momentum factor
+   * @param phip      strenght of attraction factor to best particle in the one particle's history
+   * @param phig      strenght of attraction factor respect all best particle in the swarm
+   * @return Minimum value
+   */
+  def algorithm(eval: Int, swarmSize: Int, space: SearchSpace)(f: Particle => Double, init: Bound[Double], omega: Double, phip: Double, phig: Double): Particle = {
 
     def step(pi: Particle, gi: Particle, vi: DenseVector[Double]): (Particle, DenseVector[Double]) = {
       val (rp, rg, x): (Double, Double, Particle) = (SearchSpace.rndm01, SearchSpace.rndm01, space.rndmX)
-      val vk: DenseVector[Double] = omega * vi + phip * rp * (pi - vi) + phig * rg * (gi - x)
+      val vk: DenseVector[Double] = omega * vi + phip * rp * (pi - x) + phig * rg * (gi - x)
       val vkBounded: DenseVector[Double] = SearchSpace.boundParticle(vk, space.vBound)
 
       val xk: Particle = x + vkBounded
@@ -30,7 +42,7 @@ object ParticleSwarmOptimization {
       if (acc == 0) g else aux(acc - 1)(swarmOpt, velSwarmk)
     }
 
-    aux(eval)(space.swarm(swarmSize), space.swarmV(swarmSize))
+    aux(eval)(space.swarm(swarmSize, init), space.swarmV(swarmSize))
   }
 
 
