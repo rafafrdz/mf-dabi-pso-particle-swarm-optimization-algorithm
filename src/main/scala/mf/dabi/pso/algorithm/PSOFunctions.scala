@@ -7,18 +7,28 @@ import mf.dabi.pso.algorithm.space.SearchSpace.{Bound, Particle}
 
 object PSOFunctions {
 
-  val dim: Int = 20
+  val dim: Int = 2
+
+  /** With Dim = 2 => Minimum is in (0,0) */
   lazy val limitsSphere: Bound[Double] = List.fill(dim)((-100, 100))
   lazy val spaceSphere: SearchSpace = SearchSpace(dim, limitsSphere)
-  def PSOSphere: Particle = algorithm(4000, 237, spaceSphere)(sphere, -0.2887, 0.4862, 2.5067)
+  lazy val initSphere: Bound[Double] = List.fill(dim)((50, 100))
 
+  def PSOSphere: Particle = algorithm(10000, 237, spaceSphere)(sphere, initSphere, -0.2887, 0.4862, 2.5067)
+
+  /** With Dim = 2 => Minimum is in (1,1) */
   lazy val limitsRosenbrock: Bound[Double] = List.fill(dim)((-30, 30))
   lazy val spaceRosenbrock: SearchSpace = SearchSpace(dim, limitsRosenbrock)
-  def PSORosenbrock: Particle = algorithm(4000, 237, spaceRosenbrock)(rosenbrock, -0.2887, 0.4862, 2.5067)
+  lazy val initRosenbrock: Bound[Double] = List.fill(dim)((15, 30))
 
-  lazy val limitsRastrigin: Bound[Double] = List.fill(dim)((-5.2, 5.2))
+  def PSORosenbrock: Particle = algorithm(10000, 237, spaceRosenbrock)(rosenbrock, initRosenbrock, -0.2887, 0.4862, 2.5067)
+
+  /** With Dim = 2 => Minimum is in (0,0) */
+  lazy val limitsRastrigin: Bound[Double] = List.fill(dim)((-5.12, 5.12))
   lazy val spaceRastrigin: SearchSpace = SearchSpace(dim, limitsRastrigin)
-  def PSORastrigin: Particle = algorithm(4000, 237, spaceRastrigin)(rastrigin, -0.2887, 0.4862, 2.5067)
+  lazy val initRastrigin: Bound[Double] = List.fill(dim)((2.56, 5.12))
+
+  def PSORastrigin: Particle = algorithm(10000, 237, spaceRastrigin)(rastrigin, initRastrigin, -0.2887, 0.4862, 2.5067)
 
   def main(args: Array[String]): Unit = {
     val p: Particle = PSORastrigin
